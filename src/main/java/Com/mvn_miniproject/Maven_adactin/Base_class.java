@@ -1,8 +1,17 @@
 package Com.mvn_miniproject.Maven_adactin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xslf.usermodel.XSLFSlideShowFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -16,6 +25,7 @@ import org.openqa.selenium.support.ui.Select;
 
 public class Base_class {
 	public static WebDriver driver;
+	public static String value;
 
 	public static WebDriver systemproperty(String types) {
 		if (types.equalsIgnoreCase("chrome")) {
@@ -76,6 +86,35 @@ public class Base_class {
 
 		FileHandler.copy(dd, s);
 
+	}
+
+	public static String read_data(String path, int row, int cell) throws IOException {
+
+		File f = new File(path);
+
+		FileInputStream fis = new FileInputStream(f);
+
+		Workbook wb = new XSSFWorkbook(fis);
+
+		Sheet s = wb.getSheetAt(0);
+		Row r = s.getRow(row);
+
+		Cell c = r.getCell(cell);
+		CellType ct = c.getCellType();
+
+		if (ct.equals(CellType.STRING)) {
+
+			value = c.getStringCellValue();
+		}
+
+		else if (ct.equals(CellType.NUMERIC)) {
+
+			double v1 = c.getNumericCellValue();
+
+			int v2 = (int) v1;
+			value = String.valueOf(v2);
+		}
+return value;
 	}
 
 	public static void close() {
